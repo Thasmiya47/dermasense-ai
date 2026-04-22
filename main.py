@@ -21,13 +21,27 @@ dark = theme == "Dark"
 bg = "#0f0c29" if dark else "white"
 text = "white" if dark else "black"
 
+# ------------------ FIXED CSS ------------------
 st.markdown(f"""
 <style>
+
+/* Main background */
 .stApp {{
     background-color: {bg};
     color: {text};
 }}
 
+/* FORCE ALL TEXT */
+html, body, [class*="css"] {{
+    color: {text} !important;
+}}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6, p, label {{
+    color: {text} !important;
+}}
+
+/* Title */
 .title {{
     text-align: center;
     font-size: 52px;
@@ -49,6 +63,7 @@ st.markdown(f"""
     color: {text};
 }}
 
+/* Cards */
 .card {{
     background: linear-gradient(135deg, #2b1055, #7597de);
     padding: 14px;
@@ -64,6 +79,7 @@ st.markdown(f"""
     margin-top: 6px;
     color: {text};
 }}
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -99,13 +115,13 @@ def get_days(label):
 recommendations = {
     0: {
         "morning": ["Salicylic Acid Cleanser", "Niacinamide Serum", "Oil-free Moisturizer", "SPF 50"],
-        "night": ["Benzoyl Peroxide", "Retinol (2-3 times/week)", "Gel Moisturizer"],
-        "tips": ["Avoid oily food", "Clean pillow covers", "Drink water"]
+        "night": ["Benzoyl Peroxide", "Retinol 2-3x/week", "Gel Moisturizer"],
+        "tips": ["Avoid oily food", "Clean pillow covers", "Hydration"]
     },
     1: {
         "morning": ["Vitamin C Serum", "Hyaluronic Acid", "Moisturizer", "SPF 30-50"],
         "night": ["Hydrating Cleanser", "Peptide Cream", "Light Moisturizer"],
-        "tips": ["Balanced diet", "Sleep well", "Hydration"]
+        "tips": ["Balanced diet", "Sleep 7-8 hours", "Hydration"]
     },
     2: {
         "morning": ["Centella Serum", "Ceramide Moisturizer", "Sunscreen"],
@@ -114,7 +130,7 @@ recommendations = {
     }
 }
 
-# ------------------ HOME PAGE ------------------
+# ------------------ HOME ------------------
 if not st.session_state.started:
 
     st.markdown('<div class="title">🧴 DermaSense AI</div>', unsafe_allow_html=True)
@@ -139,7 +155,7 @@ if not st.session_state.started:
         st.session_state.started = True
         st.rerun()
 
-# ------------------ MAIN APP ------------------
+# ------------------ MAIN ------------------
 else:
 
     col1, col2 = st.columns([8,2])
@@ -170,7 +186,7 @@ else:
 
         tab1, tab2, tab3 = st.tabs(["🧬 Skin Type","💡 Recommendation","📊 Recovery"])
 
-        # ------------------ TAB 1 ------------------
+        # ---------------- TAB 1 ----------------
         with tab1:
             st.markdown(f"""
             <div class="card">
@@ -189,7 +205,7 @@ else:
             </div>
             """, unsafe_allow_html=True)
 
-        # ------------------ TAB 2 ------------------
+        # ---------------- TAB 2 ----------------
         with tab2:
             st.markdown("### 🌞 Morning Routine")
             for i in rec["morning"]:
@@ -203,7 +219,7 @@ else:
             for i in rec["tips"]:
                 st.markdown(f"<div class='small-card'>✔ {i}</div>", unsafe_allow_html=True)
 
-        # ------------------ TAB 3 (FIXED) ------------------
+        # ---------------- TAB 3 ----------------
         with tab3:
 
             days = get_days(prediction)
