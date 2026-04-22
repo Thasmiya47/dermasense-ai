@@ -18,13 +18,13 @@ def go_home():
 theme = st.sidebar.radio("🎨 Theme", ["Dark", "Light"])
 dark = theme == "Dark"
 
-bg = "linear-gradient(135deg, #0f0c29, #302b63, #24243e)" if dark else "white"
+bg = "#0f0c29" if dark else "white"
 text = "white" if dark else "black"
 
 st.markdown(f"""
 <style>
 .stApp {{
-    background: {bg};
+    background-color: {bg};
     color: {text};
 }}
 
@@ -40,14 +40,13 @@ st.markdown(f"""
     font-size: 26px;
     font-weight: bold;
     color: #d1c4ff;
-    margin-top: 10px;
 }}
 
 .desc {{
     text-align: center;
     font-size: 16px;
-    margin-top: 10px;
     line-height: 1.8;
+    color: {text};
 }}
 
 .card {{
@@ -56,18 +55,15 @@ st.markdown(f"""
     border-radius: 14px;
     margin-top: 8px;
     color: white;
-    box-shadow: 0 0 15px #6a11cb;
 }}
 
 .small-card {{
-    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    background: {("#1a1a2e" if dark else "#f2f2f2")};
     padding: 10px;
     border-radius: 12px;
     margin-top: 6px;
-    color: white;
-    box-shadow: 0 0 10px #4a4aff;
+    color: {text};
 }}
-
 </style>
 """, unsafe_allow_html=True)
 
@@ -99,61 +95,22 @@ mapping_yesno = {"no":0,"yes":1}
 def get_days(label):
     return 28 if label == 0 else 10 if label == 1 else 18
 
+# ------------------ RECOMMENDATIONS ------------------
 recommendations = {
     0: {
-        "morning": [
-            "Salicylic Acid Cleanser (0.5% - 2%)",
-            "Niacinamide Serum (5% - 10%)",
-            "Oil-free Moisturizer",
-            "SPF 50 Sunscreen"
-        ],
-        "night": [
-            "Benzoyl Peroxide (2.5% - 5%)",
-            "Retinol (0.1% - 0.3%) - 2 to 3 times/week",
-            "Gel-based Moisturizer"
-        ],
-        "tips": [
-            "Avoid oily and junk food",
-            "Clean pillow covers regularly",
-            "Stay hydrated (2–3L water daily)"
-        ]
+        "morning": ["Salicylic Acid Cleanser", "Niacinamide Serum", "Oil-free Moisturizer", "SPF 50"],
+        "night": ["Benzoyl Peroxide", "Retinol (2-3 times/week)", "Gel Moisturizer"],
+        "tips": ["Avoid oily food", "Clean pillow covers", "Drink water"]
     },
-
     1: {
-        "morning": [
-            "Vitamin C Serum (10% - 15%)",
-            "Hyaluronic Acid (1% - 2%)",
-            "Moisturizer with ceramides",
-            "SPF 30–50 Sunscreen"
-        ],
-        "night": [
-            "Hydrating Cleanser",
-            "Peptide Moisturizer",
-            "Light Repair Cream"
-        ],
-        "tips": [
-            "Maintain balanced diet",
-            "Sleep 7–8 hours",
-            "Drink enough water"
-        ]
+        "morning": ["Vitamin C Serum", "Hyaluronic Acid", "Moisturizer", "SPF 30-50"],
+        "night": ["Hydrating Cleanser", "Peptide Cream", "Light Moisturizer"],
+        "tips": ["Balanced diet", "Sleep well", "Hydration"]
     },
-
     2: {
-        "morning": [
-            "Centella Asiatica Serum",
-            "Ceramide Moisturizer",
-            "Mineral Sunscreen (SPF 30+)"
-        ],
-        "night": [
-            "Soothing Gel (Aloe/Cica based)",
-            "Barrier Repair Cream",
-            "Hydrating Serum"
-        ],
-        "tips": [
-            "Avoid harsh exfoliation",
-            "Do patch testing before products",
-            "Use gentle skincare only"
-        ]
+        "morning": ["Centella Serum", "Ceramide Moisturizer", "Sunscreen"],
+        "night": ["Aloe Gel", "Barrier Cream", "Hydration Serum"],
+        "tips": ["Avoid harsh products", "Patch test", "Gentle care"]
     }
 }
 
@@ -162,21 +119,19 @@ if not st.session_state.started:
 
     st.markdown('<div class="title">🧴 DermaSense AI</div>', unsafe_allow_html=True)
 
-    # ✔ BIG SUBTITLE
     st.markdown("""
     <div class="big-subtitle">
         AI-driven Skin Analysis & Recommendation System
     </div>
     """, unsafe_allow_html=True)
 
-    # ✔ DESCRIPTION (5 POINTS ROW STYLE)
-    st.markdown("""
+    st.markdown(f"""
     <div class="desc">
-        🧠 Detects your skin type using AI<br>
+        🧠 Detects skin type using AI<br>
         📊 Analyzes acne, pigmentation & sensitivity<br>
-        💡 Gives personalized skincare routine<br>
-        🌙 Suggests morning & night care steps<br>
-        📈 Shows recovery improvement forecast
+        💡 Personalized skincare routine<br>
+        🌙 Morning & Night care plan<br>
+        📈 Recovery forecast prediction
     </div>
     """, unsafe_allow_html=True)
 
@@ -200,7 +155,7 @@ else:
 
     if st.button("🔮 Analyze"):
 
-        input_data = pd.DataFrame([[
+        input_data = pd.DataFrame([[ 
             mapping_skin[skin_type],
             mapping_acne[acne],
             mapping_yesno[pigmentation],
@@ -224,9 +179,7 @@ else:
             </div>
             """, unsafe_allow_html=True)
 
-            # ✔ SELECTED INPUTS BELOW SKIN TYPE
             st.markdown("### 🧾 Selected Inputs")
-
             st.markdown(f"""
             <div class="small-card">
                 Skin Type: {skin_type.title()}<br>
@@ -238,7 +191,6 @@ else:
 
         # ------------------ TAB 2 ------------------
         with tab2:
-
             st.markdown("### 🌞 Morning Routine")
             for i in rec["morning"]:
                 st.markdown(f"<div class='small-card'>✔ {i}</div>", unsafe_allow_html=True)
@@ -251,25 +203,43 @@ else:
             for i in rec["tips"]:
                 st.markdown(f"<div class='small-card'>✔ {i}</div>", unsafe_allow_html=True)
 
-        # ------------------ TAB 3 ------------------
+        # ------------------ TAB 3 (FIXED) ------------------
         with tab3:
 
             days = get_days(prediction)
 
             st.markdown(f"""
             <div class="card">
-                <h3>📊 Recovery Time</h3>
+                <h3>📊 Recovery Forecast</h3>
                 <h2>{days} Days</h2>
             </div>
             """, unsafe_allow_html=True)
 
-            x = np.arange(days)
+            x = np.arange(1, days + 1)
             y = np.log1p(x) / np.log1p(days) * 100
 
             fig, ax = plt.subplots()
             ax.plot(x, y, linewidth=3)
-            ax.set_ylim(0, 100)
+
+            ax.set_xlabel("Days")
+            ax.set_ylabel("Recovery / Improvement (%)")
             ax.set_title("Skin Improvement Over Time")
+            ax.set_ylim(0, 100)
             ax.grid(True)
+
+            if dark:
+                ax.set_facecolor("#0f0c29")
+                fig.patch.set_facecolor("#0f0c29")
+                ax.tick_params(colors="white")
+                ax.xaxis.label.set_color("white")
+                ax.yaxis.label.set_color("white")
+                ax.title.set_color("white")
+            else:
+                ax.set_facecolor("white")
+                fig.patch.set_facecolor("white")
+                ax.tick_params(colors="black")
+                ax.xaxis.label.set_color("black")
+                ax.yaxis.label.set_color("black")
+                ax.title.set_color("black")
 
             st.pyplot(fig)
